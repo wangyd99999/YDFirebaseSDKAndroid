@@ -6,7 +6,10 @@ apply plugin: 'kotlin-android-extensions'
 
 apply plugin: 'com.github.dcendents.android-maven'
 
+apply plugin: 'com.jfrog.bintray'
+
 //apply plugin: 'com.google.gms.google-services'
+group='com.github.wangyd99999'
 
 android {
     compileSdkVersion 29
