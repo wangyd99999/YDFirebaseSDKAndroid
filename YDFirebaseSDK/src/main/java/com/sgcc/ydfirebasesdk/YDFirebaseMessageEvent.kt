@@ -1,7 +1,5 @@
 package com.sgcc.ydfirebasesdk
 
-import org.json.JSONObject
-
 class YDFirebaseMessageEvent {
 
     var messageBody: String? = null

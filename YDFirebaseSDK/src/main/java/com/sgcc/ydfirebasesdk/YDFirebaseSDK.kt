@@ -7,7 +7,6 @@ import android.app.NotificationManager
 import android.os.Build
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.tasks.OnCompleteListener
-import com.google.firebase.FirebaseApp
 import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.messaging.FirebaseMessaging
 
@@ -26,6 +25,9 @@ class YDFirebaseSDK {
     /** 保存用户Token */
     var userToken: String? = null
 
+    /** 回调 */
+    var mCallbackYDFirebaseSDK: CallbackYDFirebaseSDK? = null
+
     companion object {
         val singleInstance: YDFirebaseSDK by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) { YDFirebaseSDK() }
     }
@@ -33,7 +35,6 @@ class YDFirebaseSDK {
     fun  registerNotification(application: Application) {
 
         FirebaseMessaging.getInstance().isAutoInitEnabled = true
-        FirebaseApp.initializeApp(application)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             // Create channel to show notifications.
@@ -52,6 +53,11 @@ class YDFirebaseSDK {
                 }
 
                 this.firebaseToken = task.result?.token
+
+                //回调注册后的token
+                if (mCallbackYDFirebaseSDK != null) {
+                    mCallbackYDFirebaseSDK?.firebaseSDKCallbackCode(task.result?.token)
+                }
 
                 uploadFirebaseToken()
             })
@@ -93,9 +99,10 @@ class YDFirebaseSDK {
         if (this.baseURL != null && this.action != null && this.firebaseToken != null && this.userToken != null) {
 
             YDFirebaseNetwork.uploadFirebaseToken(this.baseURL!!, this.action!!, this.userToken!!, this.firebaseToken!!)
-
         }
-
     }
 
+    interface CallbackYDFirebaseSDK {
+        fun firebaseSDKCallbackCode(code: String?)
+    }
 }
