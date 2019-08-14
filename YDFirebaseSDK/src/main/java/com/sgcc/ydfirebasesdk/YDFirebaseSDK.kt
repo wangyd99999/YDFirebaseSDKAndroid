@@ -1,11 +1,15 @@
 package com.sgcc.ydfirebasesdk
 
+import android.app.Activity
 import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.os.Build
+import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.FirebaseApp
 import com.google.firebase.iid.FirebaseInstanceId
+import com.google.firebase.messaging.FirebaseMessaging
 
 
 class YDFirebaseSDK {
@@ -27,6 +31,10 @@ class YDFirebaseSDK {
     }
 
     fun  registerNotification(application: Application) {
+
+        FirebaseMessaging.getInstance().isAutoInitEnabled = true
+        FirebaseApp.initializeApp(application)
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             // Create channel to show notifications.
             val channelId = "fcm_firebase_channel"
@@ -47,6 +55,22 @@ class YDFirebaseSDK {
 
                 uploadFirebaseToken()
             })
+    }
+
+    /**
+     * 设置AutoInitEnabled
+     *
+     * @param enabled 设置enable
+     * */
+    fun setAutoInitEnabled(enabled: Boolean) {
+        FirebaseMessaging.getInstance().isAutoInitEnabled = enabled
+    }
+
+    /**
+     * 检测是否安装GooglePlay
+     * */
+    fun makeGooglePlayServicesAvailable(activity: Activity) {
+        GoogleApiAvailability.getInstance().makeGooglePlayServicesAvailable(activity)
     }
 
     /**
